@@ -1,0 +1,7 @@
+{
+  "version": "1.0.0",
+  "name": "@micro-frame/server",
+  "dependencies": {
+    "@micro-frame/utils": "1.0.0"
+  }
+}

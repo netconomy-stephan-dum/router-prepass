@@ -1,0 +1,7 @@
+{
+  "version": "1.0.0",
+  "name": "@micro-frame/browser",
+  "dependencies": {
+    "@micro-frame/utils": "1.0.0"
+  }
+}

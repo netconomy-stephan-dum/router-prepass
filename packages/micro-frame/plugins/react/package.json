@@ -1,0 +1,17 @@
+{
+  "version": "1.0.0",
+  "name": "@micro-frame/plugin-react",
+  "packageManager": "yarn@3.0.2",
+  "main": "./react.server.ts",
+  "browser": "./react.browser.ts",
+  "dependencies": {
+    "@micro-frame/server": "1.0.0",
+    "@micro-frame/utils": "1.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@types/react": "^17.0.31",
+    "@types/react-dom": "^17.0.10"
+  }
+}

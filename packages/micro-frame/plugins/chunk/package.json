@@ -1,0 +1,11 @@
+{
+  "name": "@micro-frame/plugin-chunk",
+  "packageManager": "yarn@3.1.0",
+  "version": "1.0.0",
+  "main": "./chunk.server.ts",
+  "browser": "./chunk.browser.ts",
+  "dependencies": {
+    "@micro-frame/server": "1.0.0",
+    "@micro-frame/utils": "1.0.0"
+  }
+}

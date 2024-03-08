@@ -1,0 +1,11 @@
+{
+  "version": "1.0.0",
+  "name": "@micro-frame/plugin-router",
+  "packageManager": "yarn@3.0.2",
+  "main": "router.server.ts",
+  "browser": "./router.browser.ts",
+  "dependencies": {
+    "@micro-frame/server": "1.0.0",
+    "@micro-frame/utils": "1.0.0"
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "extends": "@dev/typescript/tsconfig.module.json",
+  "compilerOptions": {
+    "jsx": "react-jsx"
+  }
+}
