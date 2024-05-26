@@ -1,15 +1,18 @@
 {
-  "name": "vite-test",
+  "name": "microframe",
   "private": true,
   "version": "1.0.0",
   "author": "Stephan Dum <s.dum@netconomy.net>",
   "license": "MIT",
   "packageManager": "yarn@3.5.1",
+  "dependencies": {
+    "@microframe/cli": "1.0.0"
+  },
   "scripts": {
     "lint": "yarn workspaces foreach run lint",
-    "dev-server": "cd packages/example/server && webpack --progress --watch",
-    "dev-browser": "cd packages/example/browser && webpack --progress --watch",
-    "start-server": "cd packages/example/server && node --inspect .dist/private/server.js",
+    "dev-server": "cd packages/example/server && yarn webpack --watch",
+    "dev-browser": "cd packages/example/browser && yarn webpack --watch",
+    "start-server": "cd packages/example/server && node .dist/private/server.js",
     "dev": "yarn dev-server & yarn dev-browser"
   },
   "workspaces": [

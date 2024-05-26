@@ -1,10 +1,11 @@
 import express from 'express';
-import ssrProxy from "./middleware/ssr-proxy";
+import ssrProxy from './middleware/ssr-proxy';
 import path from 'node:path';
 import compression from 'compression';
+import jsonProxy from './middleware/json-proxy';
 
 const logger = console;
-const PORT = "8100";
+const PORT = '8100';
 const publicDir = path.resolve('../browser/.dist/public');
 const staticDir = path.resolve('./.static');
 (async () => {
@@ -13,6 +14,7 @@ const staticDir = path.resolve('./.static');
     .use(compression())
     .use(express.static(publicDir))
     .use(express.static(staticDir))
+    .use('/api/:requestedLevelId/:pathname', [express.json(), jsonProxy])
     .use(srrMiddleware);
 
   const server = app.listen(PORT, () => {

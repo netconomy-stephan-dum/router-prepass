@@ -1,10 +1,13 @@
+import { Derefer } from './createDerefer';
+
 export interface RenderContext {
+  method: 'get' | 'post';
   chunkName: string;
+  groups: Record<string, string>;
   aboveFold: boolean;
   assetsByChunkName: Record<string, string[]>;
-  levelId: number;
-  setLevelId: () => number;
-  setHead: (node?: TemplateNode[], statusCode?: number | false) => void;
+  levelId: string;
+  provides: Record<string, Derefer>;
 }
 
 export interface TemplateProps {
@@ -26,6 +29,7 @@ export type TemplateNodeFactory = (context: RenderContext) => TemplateNode;
 export type TemplateDescriptor = TemplateNodeFactory | TemplateNode;
 
 export interface PnPLocation {
+  fullPathname: string;
   pathname: string;
   hash: string;
   search: string;
@@ -37,6 +41,5 @@ export interface MicroNode {
 
 export type NodeResult = MicroNode | MicroNode[];
 type NodeFactory = (context: RenderContext, isHydrate?: boolean) => NodeResult;
-
 
 export type StreamNode = NodeResult | NodeFactory;

@@ -1,21 +1,26 @@
-import createMicroNode from "@micro-frame/utils/createMicroNode";
-import { NodeTypes } from "@micro-frame/server/types";
-import {ChunkNode} from "./types";
+import path from 'node:path';
+import createMicroNode from '@micro-frame/utils/createMicroNode';
+import { NodeTypes } from '@micro-frame/server/types';
+import { ChunkNode } from './types';
 
-const chunk: NodeTypes<ChunkNode> = async ({ chunkName, chunk: chunkFactory, aboveFold }, parentContext) => {
-  const { assetsByChunkName, setAssets } = parentContext;
-
-  const chunk = await chunkFactory().then((mod) => 'default' in mod ? mod.default : mod);
-
+const chunk: NodeTypes<ChunkNode> = async (
+  { hydrate, chunkName, chunk: chunkFactory, aboveFold },
+  parentContext,
+) => {
+  const chunk = await chunkFactory().then((mod) => ('default' in mod ? mod.default : mod));
   const childContext = {
     ...parentContext,
     chunkName,
-    aboveFold: aboveFold || parentContext.aboveFold
+    aboveFold: aboveFold || parentContext.aboveFold,
   };
 
+  const { assetsByChunkName, setAssets } = parentContext;
+  const assets = [...(assetsByChunkName[chunkName] || [])];
+
   setAssets(
-    [...(assetsByChunkName[chunkName] || [])],
-    childContext.aboveFold
+    hydrate ? assets : assets.filter((asset) => path.extname(asset) !== '.js'),
+    parentContext.levelId,
+    childContext.aboveFold,
   );
 
   return createMicroNode(chunk, childContext);

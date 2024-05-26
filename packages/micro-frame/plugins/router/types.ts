@@ -1,4 +1,4 @@
-import {StreamNode} from "@micro-frame/utils/types";
+import { StreamNode } from '@micro-frame/utils/types';
 
 export type ILoadable<T = unknown> = () => Promise<{ default: T }>;
 
@@ -8,6 +8,7 @@ export interface IRouteProps {
   chunkName: string;
   node?: StreamNode;
   path?: string | RegExp;
+  hydrate?: boolean;
 }
 
 export interface RouterNode {

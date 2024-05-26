@@ -4,6 +4,7 @@
   "version": "1.0.0",
   "main": "./chunk.server.ts",
   "browser": "./chunk.browser.ts",
+  "sideEffects": false,
   "dependencies": {
     "@micro-frame/server": "1.0.0",
     "@micro-frame/utils": "1.0.0"

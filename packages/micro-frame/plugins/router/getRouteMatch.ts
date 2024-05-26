@@ -1,18 +1,19 @@
-import { IRouteProps } from "./types";
+import { IRouteProps } from './types';
 
 const getRouteMatch = (routes: IRouteProps[], pathname: string) => {
-  for(let i = 0; i < routes.length; i++) {
-    const route = routes[i];
+  for (let index = 0; index < routes.length; index++) {
+    const route = routes[index];
 
     if (!route.path) {
       return {
         route,
         remaining: pathname,
         params: [],
+        groups: {},
       };
     }
     switch (Object.prototype.toString.call(route.path)) {
-      case "[object RegExp]":
+      case '[object RegExp]':
         const match = pathname.match(route.path);
         if (match && match.index === 0) {
           return {
@@ -20,15 +21,16 @@ const getRouteMatch = (routes: IRouteProps[], pathname: string) => {
             remaining: pathname.replace(match[0], ''),
             params: match.slice(1),
             groups: match.groups,
-          }
+          };
         }
         break;
-      case "[object String]":
+      case '[object String]':
         if (pathname.startsWith(route.path as string)) {
           return {
             route,
             remaining: pathname.replace(route.path, ''),
             params: [],
+            groups: {},
           };
         }
         break;
@@ -36,6 +38,6 @@ const getRouteMatch = (routes: IRouteProps[], pathname: string) => {
   }
 
   return null;
-}
+};
 
 export default getRouteMatch;

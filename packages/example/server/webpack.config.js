@@ -18,10 +18,13 @@ module.exports = () => {
     entry: {
       server: require.resolve('./index.ts'),
     },
-    externals: [nodeExternals({
-      modulesDir: path.resolve(__dirname, '../../../node_modules'),
-      allowlist: [/@example/, /@micro-frame/],
-    })],
+    devtool: 'source-map',
+    externals: [
+      nodeExternals({
+        modulesDir: path.resolve(__dirname, '../../../node_modules'),
+        allowlist: [/@example/, /@micro-frame/],
+      }),
+    ],
     externalsType: 'node-commonjs',
     externalsPresets: { node: true },
     resolve: {
@@ -29,6 +32,10 @@ module.exports = () => {
     },
     module: {
       rules: [
+        {
+          type: 'asset',
+          test: /\.(ico|png|jpe?g|gif|woff2?|ttf|otf)$/,
+        },
         {
           test: /\.[jt]sx?$/,
           loader: require.resolve('ts-loader'),
@@ -45,19 +52,19 @@ module.exports = () => {
               loader: require.resolve('css-loader'),
               options: {
                 modules: {
-                  exportOnlyLocals: true
+                  exportOnlyLocals: true,
                 },
-              }
+              },
             },
           ],
-        }
-      ]
+        },
+      ],
     },
     output: {
       path: path.join(__dirname, '.dist/private'),
       filename: './[name].js',
+      publicPath: '/',
     },
-    plugins: [
-    ]
-  }
+    plugins: [],
+  };
 };

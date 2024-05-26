@@ -6,11 +6,21 @@
   --content-width: 1024px;
 }
 
+@font-face {
+  font-family: "Sans-Variable";
+  src: url("./assets/Sans-Variable.woff2") format("woff2");
+  font-display: optional;
+}
+
+
 body, html {
   padding:0;
   margin:0;
   width: 100%;
   height: 100%;
+}
+body {
+  font-family: "Sans-Variable", sans-serif;
 }
 #root {
   width: 100%;

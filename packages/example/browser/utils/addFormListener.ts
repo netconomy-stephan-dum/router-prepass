@@ -1,5 +1,5 @@
-import { PnPNode, SubmitEvent } from "@micro-frame/browser/types";
-import createFormData from "./createFormData";
+import { PnPNode, SubmitEvent } from '@micro-frame/browser/types';
+import createFormData from './createFormData';
 
 const addFormListener = (root: PnPNode) => {
   document.addEventListener('submit', (event: Event) => {
@@ -15,10 +15,10 @@ const addFormListener = (root: PnPNode) => {
     event.preventDefault();
 
     const { pathname, hash, search } = new URL(action);
-    root.navigate?.({ pathname, hash, search, state }).then(() => {
+    root.navigate?.({ pathname, hash, search, fullPathname: pathname }, state, false).then(() => {
       history.pushState(state, document.title, pathname + search + search);
     });
-  })
+  });
 };
 
 export default addFormListener;

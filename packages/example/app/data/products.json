@@ -1,0 +1,20 @@
+[
+  {
+    "productId": 1,
+    "categoryId": 1,
+    "name": "Fu",
+    "img": "https://media.xxxlutz.com/i/xxxlutz/PIYbF072VOanSYyd1IZ2UrlQ/?fmt=auto&%24dq%24=&w=200"
+  },
+  {
+    "productId": 2,
+    "categoryId": 1,
+    "name": "bar",
+    "img": "https://media.xxxlutz.com/i/xxxlutz/PIVSsWsLg_wegikr4XBx4-Cg/?fmt=auto&%24dq%24=&w=200"
+  },
+  {
+    "productId": 3,
+    "categoryId": 1,
+    "name": "fubar",
+    "img": "https://media.xxxlutz.com/i/xxxlutz/PIg9Qne44y94iW2a4-c-r1gQ/?fmt=auto&%24dq%24=&w=200"
+  }
+]

@@ -9,6 +9,7 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "sideEffects": false,
   "devDependencies": {
     "@dev/typescript": "1.0.0"
   },

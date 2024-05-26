@@ -1,4 +1,4 @@
-import { PnPNode } from "@micro-frame/browser/types";
+import { PnPNode } from '@micro-frame/browser/types';
 
 const addAnchorListener = (root: PnPNode) => {
   document.addEventListener('click', (event) => {
@@ -10,13 +10,16 @@ const addAnchorListener = (root: PnPNode) => {
         event.preventDefault();
 
         const state = {
-          method: 'GET',
+          method: 'get',
+          data: {},
         };
 
-        const {hash, search, pathname} = anchor;
-        root.navigate?.({ pathname, hash, search }).then(() => {
-          history.pushState(state, document.title, pathname + search + search);
-        });
+        const { hash, search, pathname } = anchor;
+        root
+          .navigate?.({ pathname, hash, search, fullPathname: pathname }, state, false)
+          .then(() => {
+            history.pushState(state, document.title, pathname + search + search);
+          });
       }
     }
   });

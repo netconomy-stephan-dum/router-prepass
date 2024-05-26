@@ -1,4 +1,4 @@
-import { PnPLocation, StreamNode, RenderContext } from '@micro-frame/utils/types';
+import { PnPLocation, StreamNode, RenderContext, TemplateNode } from '@micro-frame/utils/types';
 
 
 declare global {
@@ -16,6 +16,7 @@ export interface RenderContextBrowser extends RenderContext {
   state?: FormState;
   node: Element;
   location: PnPLocation;
+  setHead: (meta: TemplateNode[]) => void;
   setAssets: (asset: string[]) => Promise<void>;
   removeAssets: (assets: string[]) => void;
 }

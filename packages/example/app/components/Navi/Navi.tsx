@@ -1,41 +1,27 @@
-import styles from "./Navi.scss";
-import {FunctionComponent} from "react";
-import {MicroNode} from "@micro-frame/utils/types";
+import styles from './Navi.scss';
+import { MicroNode } from '@micro-frame/utils/types';
+import { IPrepassComponent } from '@micro-frame/plugin-react/types';
+import { useEffect } from 'react';
 
-const naviData = [
-  {
-    href: '/faq',
-    text: 'faq',
-  },
-  {
-    href: 'http://light.localhost:8100',
-    text: 'light',
-  },
-  {
-    href: 'http://dark.localhost:8100',
-    text: 'dark',
-  },
-];
-
-const Navi: FunctionComponent = () => (
-  <nav>
-    <ul>
-      <li className={styles.logo}>
-        <a href="/">
-          logo
-        </a>
-      </li>
-      {naviData.map(({ href, text }) => (
-        <li key={href}>
-          <a href={href}>{text}</a>
+const Navi: IPrepassComponent = () => {
+  useEffect(() => {
+    console.log('hydrated');
+  }, []);
+  return (
+    <nav>
+      <ul>
+        <li className={styles.logo}>
+          <a href="/">logo</a>
         </li>
-      ))}
-    </ul>
-  </nav>
-);
+      </ul>
+    </nav>
+  );
+};
 
 const NaviMicroNode: MicroNode = {
   type: 'react',
+  cacheKey: 'Navi',
+  hydrate: true,
   wrapper: { tagName: 'header', props: { className: styles.header } },
   component: Navi,
 };

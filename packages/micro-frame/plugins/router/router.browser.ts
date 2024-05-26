@@ -1,8 +1,8 @@
 import { PnPLocation } from '@micro-frame/utils/types';
-import createMicroNode from "@micro-frame/utils/createMicroNode";
-import getRouteMatch from "./getRouteMatch";
+import createMicroNode from '@micro-frame/utils/createMicroNode';
+import getRouteMatch from './getRouteMatch';
 import { FormState, PnPNode, PnPNodeConstructor } from '@micro-frame/browser/types';
-import { IRouteProps, RouterNode } from "./types";
+import { IRouteProps, RouterNode } from './types';
 
 const PnPRouter: PnPNodeConstructor<RouterNode> = async ({ routes }, parentContext, isHydrate) => {
   let activeRoute: IRouteProps = null;
@@ -16,14 +16,16 @@ const PnPRouter: PnPNodeConstructor<RouterNode> = async ({ routes }, parentConte
       return Promise.resolve();
     }
 
-    const { route, remaining, params } = routeMatch;
+    const { route, remaining, params, groups } = routeMatch;
 
-    if(activeRoute !== route) {
+    if (activeRoute !== route) {
       activeChunk?.unload();
       activeRoute = route;
 
       const context = {
         ...parentContext,
+        method: state.method,
+        groups,
         params,
         location: {
           ...location,
@@ -31,17 +33,20 @@ const PnPRouter: PnPNodeConstructor<RouterNode> = async ({ routes }, parentConte
         },
       };
 
-      const node = route.node || route.chunk && { ...route, type: 'chunk' };
+      const node = route.node || (route.chunk && { ...route, type: 'chunk' });
 
       activeChunk = await createMicroNode(node, context, shouldHydrate);
-    } else if(activeChunk) {
-      return activeChunk.navigate?.({
-        ...location,
-        pathname: remaining
-      }, state, shouldHydrate);
+    } else if (activeChunk) {
+      return activeChunk.navigate?.(
+        {
+          ...location,
+          pathname: remaining,
+        },
+        state,
+        shouldHydrate,
+      );
     }
   };
-
   await navigate(parentContext.location, parentContext.state, isHydrate);
 
   return {
@@ -49,8 +54,8 @@ const PnPRouter: PnPNodeConstructor<RouterNode> = async ({ routes }, parentConte
     unload: () => {
       activeChunk?.unload();
     },
-  }
-}
+  };
+};
 
 PnPRouter.key = 'router';
 

@@ -1,9 +1,11 @@
-import createMicroNode from "@micro-frame/utils/createMicroNode";
+import createMicroNode from '@micro-frame/utils/createMicroNode';
 import { PnPNode, RenderContextBrowser } from '@micro-frame/browser/types';
-import addFormListener from "./utils/addFormListener";
-import addAnchorListener from "./utils/addAnchorListener";
+import addFormListener from './utils/addFormListener';
+import addAnchorListener from './utils/addAnchorListener';
 import rootNode from '@example/app';
 import createElement from '@micro-frame/utils/createElement.client';
+import { TemplateNode } from '@micro-frame/utils/types';
+import plugins from '@micro-frame/utils/plugins';
 
 type AssetHandler = (asset: string) => HTMLMetaElement | HTMLScriptElement | HTMLLinkElement;
 
@@ -27,7 +29,7 @@ const assetTypes: Record<string, AssetHandler> = {
     });
   },
   jsm: (src) => {
-    return assetTypes.mjs(src.replace(/\.jsm$/, '.mjs'),)
+    return assetTypes.mjs(src.replace(/\.jsm$/, '.mjs'));
   },
 };
 const createAsset = (asset: string) => {
@@ -63,14 +65,14 @@ const setAssets = (assets: string[]) => {
           usage: 0,
           node: assetNode,
           promise,
-        }
+        };
       }
 
       const asset = activeAssets[rawAsset];
       asset.usage += 1;
 
       return asset.promise;
-    })
+    }),
   ).then(() => {});
 };
 const removeAssets = (assets: string[]) => {
@@ -78,39 +80,48 @@ const removeAssets = (assets: string[]) => {
     const asset = activeAssets[rawAsset];
     asset.usage -= 1;
 
-    if(asset.usage === 0) {
+    if (asset.usage === 0) {
       delete activeAssets[rawAsset];
       document.head.removeChild(asset.node);
     }
   });
 };
 
-
-document.addEventListener('DOMContentLoaded', async() => {
-  let levelId = 0;
+(async () => {
   let isHydration = true;
+  const setHead = (meta: TemplateNode[] = [], levelId: string) => {
+    if (!isHydration) {
+      meta.forEach((child) => {
+        const element = createElement(child, context);
+
+        if (typeof child !== 'string') {
+          (element as HTMLElement).dataset.chunk = String(levelId);
+        }
+        document.head.appendChild(element);
+      });
+    }
+  };
 
   const context: RenderContextBrowser = {
     node: document.body,
-    location: document.location,
-    levelId,
-    setHead: (meta = []) => {
-      if (!isHydration) {
-        meta.forEach((child) => {
-          const element = createElement(child, context);
-
-          if (typeof child !== 'string') {
-            (element as HTMLElement).dataset.chunk = String(levelId);
-          }
-          document.head.appendChild(element);
-        });
-      }
+    location: {
+      fullPathname: document.location.pathname,
+      ...document.location,
     },
-    setLevelId: () => levelId += 1,
+    state: {
+      // TODO: this depends on server response
+      method: 'get',
+    },
+    levelId: '0',
+    setHead(meta) {
+      return setHead(meta, this.levelId);
+    },
     aboveFold: false,
     removeAssets,
     chunkName: 'root',
     setAssets,
+    plugins,
+    provides: {},
     assetsByChunkName: window.assetsByChunkName,
   };
 
@@ -119,4 +130,4 @@ document.addEventListener('DOMContentLoaded', async() => {
 
   addAnchorListener(root);
   addFormListener(root);
-});
+})();

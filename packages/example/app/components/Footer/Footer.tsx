@@ -3,13 +3,15 @@ import styles from './footer.scss';
 
 const Footer: FunctionComponent = () => (
   <ul className={styles.footer}>
-     <li>
-       <a target="_blank" href="https://icons8.com">All icons from Icons8.com</a>
-     </li>
-     <li>
-       <a href="/imprint">Imprint</a>
-     </li>
-   </ul>
-)
+    <li>
+      <a href="/imprint">Imprint</a>
+    </li>
+  </ul>
+);
 
-export default Footer;
+export default {
+  type: 'react',
+  cacheKey: 'Footer',
+  wrapper: { tagName: 'footer', props: { className: styles.footer } },
+  component: Footer,
+};

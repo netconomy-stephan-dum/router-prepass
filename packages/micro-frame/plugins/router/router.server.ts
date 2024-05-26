@@ -1,16 +1,17 @@
-import createMicroNode from "@micro-frame/utils/createMicroNode";
-import getRouteMatch from "./getRouteMatch";
+import createMicroNode from '@micro-frame/utils/createMicroNode';
+import getRouteMatch from './getRouteMatch';
 import { RouterNode } from './types';
-import { NodeTypes } from "@micro-frame/server/types";
+import { NodeTypes } from '@micro-frame/server/types';
 
 const router: NodeTypes<RouterNode> = async ({ routes }, context) => {
   const routerMatch = getRouteMatch(routes, context.url);
 
   if (!routerMatch) {
-    return undefined;
+    throw new Error(`No route matched ${context.url}!`);
   }
+
   const { route, remaining, params, groups } = routerMatch;
-  const { chunk, chunkName, node, aboveFold } = route;
+  const { chunk, chunkName, node, aboveFold, hydrate } = route;
 
   const subContext = {
     ...context,
@@ -24,19 +25,20 @@ const router: NodeTypes<RouterNode> = async ({ routes }, context) => {
     return createMicroNode(node, subContext);
   }
 
-  if(chunk) {
+  if (chunk) {
     return createMicroNode(
       {
         type: 'chunk',
         chunk,
         chunkName,
+        hydrate,
         aboveFold: subContext.aboveFold,
       },
-      subContext
+      subContext,
     );
   }
 
-  throw new TypeError('Unknown route type, node or chunk must be set!')
+  throw new TypeError('Unknown route type, node or chunk must be set!');
 };
 
 router.key = 'router';
