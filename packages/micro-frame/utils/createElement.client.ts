@@ -1,7 +1,10 @@
-import { RenderContextBrowser } from "@micro-frame/browser/types";
-import { TemplateDescriptor } from "./types";
+import { RenderContextBrowser } from '@micro-frame/browser/types';
+import { TemplateDescriptor } from './types';
 
-const createElement = (descriptor: TemplateDescriptor, context: RenderContextBrowser): Text | HTMLElement => {
+const createElement = (
+  descriptor: TemplateDescriptor,
+  context: RenderContextBrowser,
+): Text | HTMLElement => {
   switch (typeof descriptor) {
     case 'function':
       return createElement(descriptor(context), context);

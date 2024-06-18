@@ -1,13 +1,15 @@
 import { Derefer } from './createDerefer';
+import plugins from './plugins';
 
-export interface RenderContext {
+export interface RenderContext<Provides = Record<string, unknown>> {
   method: 'get' | 'post';
   chunkName: string;
   groups: Record<string, string>;
   aboveFold: boolean;
   assetsByChunkName: Record<string, string[]>;
   levelId: string;
-  provides: Record<string, Derefer>;
+  provides: Provides;
+  plugins: typeof plugins;
 }
 
 export interface TemplateProps {
@@ -43,3 +45,10 @@ export type NodeResult = MicroNode | MicroNode[];
 type NodeFactory = (context: RenderContext, isHydrate?: boolean) => NodeResult;
 
 export type StreamNode = NodeResult | NodeFactory;
+
+export interface NodeTypes<Node = any, Context extends RenderContext = RenderContext> {
+  (node: Node, context: Context, isHydrate?: boolean): Promise<any> | any;
+  key: string;
+}
+
+export type EarlyHint = string | { path: string; rel?: 'preload' | 'preconnect'; as?: string };

@@ -1,3 +1,6 @@
 {
-  "extends": "@dev/typescript/tsconfig.module.json"
+  "extends": "@dev/typescript/tsconfig.module.json",
+  "compilerOptions": {
+    "outDir": "./dist"
+  }
 }

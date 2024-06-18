@@ -2,7 +2,20 @@
   "version": "1.0.0",
   "name": "@micro-frame/server",
   "sideEffects": false,
+  "scripts": {
+    "build": "webpack --mode production"
+  },
+  "type": "module",
   "dependencies": {
-    "@micro-frame/utils": "1.0.0"
+    "mime": "4.0.3"
+  },
+  "devDependencies": {
+    "@dev/eslint": "1.0.0",
+    "@micro-frame/utils": "1.0.0",
+    "@types/compression": "1.7.5",
+    "ts-loader": "9.5.1",
+    "typescript": "5.4.5",
+    "webpack": "5.91.0",
+    "webpack-node-externals": "3.0.0"
   }
 }

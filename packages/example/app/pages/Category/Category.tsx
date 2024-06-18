@@ -10,12 +10,12 @@ const Category: IPrepassComponent<CategoryProps> = ({ name, img, products }) => 
   return (
     <>
       <h1>{name}</h1>
-      <img src={img} alt="" width="200" height="136" />
+      <img {...img} />
       <section className={styles.list}>
         {products.map(({ name, img, productId }) => (
           <a key={productId} href={`/product/${productId}`}>
             <h2>{name}</h2>
-            <img width="200" height="135" src={img} alt="" />
+            <img {...img} />
           </a>
         ))}
       </section>
@@ -32,10 +32,10 @@ Category.meta = (context, { name }) => {
 
 Category.get = get;
 
-export default [
-  {
-    type: 'react',
-    wrapper: { tagName: 'article' },
-    component: Category,
-  },
-];
+export default {
+  type: 'react',
+  wrapper: { tagName: 'article' },
+  component: Category,
+  aboveFold: true,
+  hydrate: false,
+};

@@ -11,7 +11,7 @@ const PnPRouter: PnPNodeConstructor<RouterNode> = async ({ routes }, parentConte
     const routeMatch = getRouteMatch(routes, location.pathname);
 
     if (!routeMatch) {
-      activeChunk?.unload();
+      await activeChunk?.unload();
       activeRoute = null;
       return Promise.resolve();
     }
@@ -19,7 +19,7 @@ const PnPRouter: PnPNodeConstructor<RouterNode> = async ({ routes }, parentConte
     const { route, remaining, params, groups } = routeMatch;
 
     if (activeRoute !== route) {
-      activeChunk?.unload();
+      await activeChunk?.unload();
       activeRoute = route;
 
       const context = {
@@ -47,12 +47,13 @@ const PnPRouter: PnPNodeConstructor<RouterNode> = async ({ routes }, parentConte
       );
     }
   };
+
   await navigate(parentContext.location, parentContext.state, isHydrate);
 
   return {
     navigate,
     unload: () => {
-      activeChunk?.unload();
+      return activeChunk?.unload();
     },
   };
 };

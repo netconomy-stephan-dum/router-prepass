@@ -1,4 +1,4 @@
-import { MicroNode } from '@example/server/types';
+import { MicroNode } from '@micro-frame/utils/types';
 
 export interface ChunkNode {
   type: 'chunk';

@@ -2,7 +2,6 @@ const { FlatCompat } = require('@eslint/eslintrc');
 const PrettierConfig = require('eslint-config-prettier');
 const PrettierPlugin = require('eslint-plugin-prettier');
 const js = require('@eslint/js');
-const cjsConfig = require('./cjs.config');
 
 const compat = new FlatCompat();
 const baseConfig = [
@@ -34,10 +33,6 @@ const baseConfig = [
   },
   ...compat.config(PrettierPlugin.configs.recommended),
   ...compat.config(PrettierConfig),
-  {
-    files: ['**/eslint.config.js', '**/*.cjs'],
-    ...cjsConfig,
-  },
 ];
 
 module.exports = baseConfig;

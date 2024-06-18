@@ -1,16 +1,22 @@
-import { TemplateDescriptor } from "./types";
-import createElement from "./createElement.client";
-import { RenderContextBrowser } from "@micro-frame/browser/types";
+import { TemplateDescriptor } from './types';
+import createElement from './createElement.client';
+import { RenderContextBrowser } from '@micro-frame/browser/types';
 
-const createWrapperClient = (Wrapper: TemplateDescriptor, parentContext: RenderContextBrowser, isHydrate: boolean) => {
+const createWrapperClient = (
+  Wrapper: TemplateDescriptor,
+  parentContext: RenderContextBrowser,
+  isHydrate: boolean,
+) => {
   if (!Wrapper) {
     return {
       context: parentContext,
       unload: () => {},
-    }
+    };
   }
 
-  const wrapper = isHydrate ? document.querySelector(`[data-frame="${parentContext.levelId}"]`) : createElement(Wrapper, parentContext);
+  const wrapper = isHydrate
+    ? document.querySelector(`[data-frame="${parentContext.levelId}"]`)
+    : createElement(Wrapper, parentContext);
 
   if (wrapper instanceof Text) {
     throw new TypeError('TextNode cant be a Wrapper!');
@@ -18,19 +24,23 @@ const createWrapperClient = (Wrapper: TemplateDescriptor, parentContext: RenderC
 
   const context = {
     ...parentContext,
-    node: wrapper.querySelector(`[data-root="${parentContext.levelId}"]`) || wrapper
+    node: wrapper.querySelector(`[data-root="${parentContext.levelId}"]`) || wrapper,
   };
 
-  if (!isHydrate) {
-    parentContext.node.appendChild(wrapper);
-  }
+  parentContext.queueResponse(
+    Promise.resolve(() => {
+      if (!isHydrate) {
+        parentContext.node.appendChild(wrapper);
+      }
+    }),
+  );
 
   return {
     context,
     unload: () => {
-      wrapper.parentNode.removeChild(wrapper);
-    }
-  }
-}
+      wrapper.parentNode?.removeChild(wrapper);
+    },
+  };
+};
 
 export default createWrapperClient;

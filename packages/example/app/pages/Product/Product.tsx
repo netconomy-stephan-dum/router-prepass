@@ -5,7 +5,7 @@ const ProductDetail: IPrepassComponent<Product> = ({ name, img }) => {
   return (
     <>
       <h1>{name}</h1>
-      <img src={img} fetchpriority="high" width="200" height="136" alt="" />
+      <img {...img} />
     </>
   );
 };
@@ -14,7 +14,6 @@ ProductDetail.meta = (context, { name, img }) => {
   return [
     { tagName: 'title', children: [name] },
     { tagName: 'meta', props: { name: 'description', content: `Welcome to product ${name}!` } },
-    { tagName: 'link', props: { rel: 'preload', as: 'image', href: img } },
   ];
 };
 
@@ -24,4 +23,6 @@ export default {
   type: 'react',
   wrapper: { tagName: 'article' },
   component: ProductDetail,
+  aboveFold: true,
+  hydrate: false,
 };

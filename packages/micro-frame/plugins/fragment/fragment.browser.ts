@@ -11,7 +11,7 @@ const PnPFragment: PnPNodeConstructor<FragmentNode> = async (
   const { context, unload } = createWrapper(wrapper, parentContext, isHydrate);
 
   if (meta && !isHydrate) {
-    context.setHead(meta);
+    context.setHead(meta, isHydrate);
   }
 
   const instances: PnPNode[] = [];
@@ -38,8 +38,9 @@ const PnPFragment: PnPNodeConstructor<FragmentNode> = async (
     navigate: async (location, state, isHydrate) => {
       await Promise.all(instances.map((child) => child?.navigate?.(location, state, isHydrate)));
     },
-    unload: () => {
-      instances.forEach((child) => child.unload());
+    unload: async () => {
+      await Promise.all(instances.map((child) => child.unload()));
+
       document.querySelectorAll(`[data-chunk="${context.levelId}"]`).forEach((element) => {
         element.parentNode.removeChild(element);
       });

@@ -1,5 +1,5 @@
-import {NodeTypes } from "@micro-frame/server/types";
-import {FragmentNode} from "./types";
+import { NodeTypes } from '@micro-frame/server/types';
+import { FragmentNode } from './types';
 import setupProvides from './setupProvides';
 import createMicroNode from '@micro-frame/utils/createMicroNode';
 
@@ -8,12 +8,12 @@ const fragment: NodeTypes<FragmentNode> = ({ children, provides = {} }, context)
 
   setupProvides(subContext, provides);
 
-  let levelId = 0;
-  return children
-    .reduce((current, child) => current.then((result) => result || createMicroNode(child, {
-      ...subContext,
-      levelId: subContext.levelId + '-'+ levelId++,
-    })), Promise.resolve(null))
+  const levelId = Number.parseInt(context.requestedLevelId.shift(), 10);
+
+  return createMicroNode(children[levelId], {
+    ...subContext,
+    levelId: subContext.levelId + '-' + levelId,
+  });
 };
 
 fragment.key = 'fragment';

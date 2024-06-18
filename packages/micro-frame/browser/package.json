@@ -2,7 +2,15 @@
   "version": "1.0.0",
   "name": "@micro-frame/browser",
   "sideEffects": false,
-  "dependencies": {
-    "@micro-frame/utils": "1.0.0"
+  "main": "./dist/browser.js",
+  "type": "module",
+  "scripts": {
+    "build": "webpack --mode production"
+  },
+  "devDependencies": {
+    "@dev/eslint": "1.0.0",
+    "@micro-frame/utils": "1.0.0",
+    "typescript": "5.4.5",
+    "webpack": "5.91.0"
   }
 }

@@ -9,6 +9,8 @@ const ImprintMicroNode = [
     type: 'react',
     wrapper: { tagName: 'section' },
     component: Imprint,
+    aboveFold: true,
+    hydrate: false,
   },
 ];
 export default ImprintMicroNode;

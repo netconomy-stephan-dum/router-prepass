@@ -2,20 +2,22 @@ import createMicroNode from '@micro-frame/utils/createMicroNode';
 import createWrapperServer from '@micro-frame/utils/create-wrapper.server';
 import { NodeTypes } from '@micro-frame/server/types';
 import { FragmentNode } from './types';
-import setupProvides from './setupProvides';
+// import setupProvides from './setupProvides';
 
 const fragment: NodeTypes<FragmentNode> = (
-  { children, wrapper, meta, statusCode, provides = {} },
+  { children, wrapper, meta, statusCode, earlyHints = [] },
   context,
 ) => {
   const subContext = { ...context };
 
   const [head, tail] = createWrapperServer(wrapper, context);
 
+  subContext.earlyHints.push(...earlyHints);
+
   const { queueResponse } = context;
 
   queueResponse(head);
-  setupProvides(subContext, provides);
+  // setupProvides(subContext, provides);
 
   if (meta || statusCode) {
     context.setHead(meta || [], statusCode || false);

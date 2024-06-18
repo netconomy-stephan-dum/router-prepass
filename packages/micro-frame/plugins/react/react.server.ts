@@ -1,114 +1,81 @@
 import { createElement } from 'react';
+import createMicroElement from '@micro-frame/utils/createElement.server';
 import { renderToString } from 'react-dom/server';
 
 import { NodeTypes, RenderContextSSR } from '@micro-frame/server/types';
 import createWrapper from '@micro-frame/utils/create-wrapper.server';
 import { ReactNode } from './types';
-import { TemplateNode } from '@micro-frame/utils/types';
+import { EarlyHint, TemplateNode } from '@micro-frame/utils/types';
+import microFetch from '@micro-frame/utils/microFetch.server';
+import microCache from '@micro-frame/server/utils/cache';
 const DefaultWrapper = { tagName: 'div' };
-interface CacheEntry {
-  node: Promise<{
-    head: string;
-    tail: string;
-    meta: TemplateNode[];
-    html: string;
-  }>;
-  isStale: boolean;
-  ttl: number;
+interface CacheItem {
+  meta: TemplateNode[];
+  html: string;
+  script: string;
 }
-const cache: Record<string, CacheEntry> = {};
-const TTL = 1000 * 60 * 5; // 5 minutes
 const render = (options: ReactNode, context: RenderContextSSR) => {
-  const { hydrate, wrapper = DefaultWrapper, component: Component } = options;
+  const { hydrate = true, wrapper = DefaultWrapper, component: Component } = options;
 
-  const [head, tail] = createWrapper(wrapper, context);
-
-  return Promise.resolve(Component[context.method]?.(context)).then(async (result) => {
+  return microFetch(Component, context, false).then(async (result) => {
     return {
-      head,
-      tail,
       meta: Component.meta ? await Promise.resolve(Component.meta(context, result || {})) : null,
-      html: [
-        renderToString(createElement(Component, result || context)),
+      script:
         (hydrate &&
           result &&
           `<script>window["hydrate-data-${context.levelId}"] = ${JSON.stringify(
             result,
           )};</script>`) ||
-          '',
-      ].join(''),
+        '',
+      html: renderToString(createElement(Component, result || context)),
     };
   });
 };
-const cachedRender = (options: ReactNode, context: RenderContextSSR) => {
-  const { cacheKey } = options;
 
-  if (cacheKey) {
-    const key = typeof cacheKey === 'function' ? cacheKey(context) : cacheKey;
-    const cacheEntry = cache[key];
-    const timestamp = new Date().getTime();
-
-    if (cacheEntry) {
-      const { isStale, ttl, node } = cacheEntry;
-      if (!isStale && ttl < timestamp) {
-        // renew cache
-        cacheEntry.isStale = true;
-        const newNode = render(options, context);
-
-        newNode
-          .then(
-            () => {
-              cacheEntry.node = newNode;
-              cacheEntry.ttl = timestamp + TTL;
-            },
-            (error) => {
-              console.log('Revalidating cache', cacheKey, 'errored', error);
-            },
-          )
-          .finally(() => {
-            cacheEntry.isStale = false;
-          });
-      }
-
-      return node;
-    }
-
-    const node = render(options, context);
-
-    node.then(() => {
-      cache[key] = {
-        node,
-        isStale: false,
-        ttl: timestamp + TTL,
-      };
-    });
-
-    return node;
-  }
-
-  return render(options, context);
-};
 const component: NodeTypes<ReactNode> = (options, context) => {
-  const { error: Error } = options;
-  const { queueResponse } = context;
+  const { error: Error, earlyHints = [], outOfOrder, wrapper, clientOnly, loading } = options;
+  const { queueResponse, queueTail } = context;
 
-  queueResponse(
-    cachedRender(options, context).then(
-      ({ head, tail, meta, html }) => {
+  context.earlyHints.push(...earlyHints);
+
+  const [head, tail] = createWrapper(wrapper, context);
+
+  queueResponse(head);
+
+  if (!clientOnly) {
+    const cachedRender: Promise<{ html: string; script?: string }> = microCache<CacheItem>(
+      options,
+      context,
+      render,
+    ).then(
+      ({ meta, html, script }) => {
         if (meta) {
           context.setHead(meta);
         }
-        return [head, html, tail].join('');
+        return { html, script };
       },
       async (error) => {
         if (Error) {
-          return renderToString(createElement(Error, error));
+          return { html: renderToString(createElement(Error, error)) };
         }
 
-        return 'Error: ' + error.toString();
+        return { html: 'Error: ' + error.toString() };
       },
-    ),
-  );
+    );
+
+    if (outOfOrder) {
+      queueResponse(Promise.resolve(createMicroElement(loading, context)));
+      queueTail(
+        cachedRender.then(({ html, script }) => {
+          return [`<template id="l_${context.levelId}">${html}</template>`, script].join('');
+        }),
+      );
+    } else {
+      queueResponse(cachedRender.then(({ html, script }) => html + script));
+    }
+  }
+
+  queueResponse(tail);
 };
 
 component.key = 'react';

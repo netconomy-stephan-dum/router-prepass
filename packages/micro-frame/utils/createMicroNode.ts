@@ -1,8 +1,10 @@
-import { StreamNode } from '@micro-frame/utils/types';
-import { RenderContextSSR } from '@micro-frame/server/types';
-import { RenderContextBrowser } from '@micro-frame/browser/types';
+import { RenderContext, StreamNode } from '@micro-frame/utils/types';
 
-const createMicroNode = <Return>(node: StreamNode, context: RenderContextSSR | RenderContextBrowser, isHydrate = false): Promise<Return> => {
+const createMicroNode = <Return>(
+  node: StreamNode,
+  context: RenderContext,
+  isHydrate = false,
+): Promise<Return> | Return => {
   if (Array.isArray(node)) {
     return context.plugins.fragment(
       {
@@ -26,6 +28,6 @@ const createMicroNode = <Return>(node: StreamNode, context: RenderContextSSR | R
   }
 
   throw new ReferenceError(`Unregistered node type '${node.type}'!\n${JSON.stringify(node)}`);
-}
+};
 
 export default createMicroNode;

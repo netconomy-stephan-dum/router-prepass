@@ -7,7 +7,7 @@ export interface IRouteProps {
   chunk?: ILoadable<StreamNode>;
   chunkName: string;
   node?: StreamNode;
-  path?: string | RegExp;
+  path?: string;
   hydrate?: boolean;
 }
 

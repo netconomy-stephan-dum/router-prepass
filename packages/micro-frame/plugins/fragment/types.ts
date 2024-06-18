@@ -1,4 +1,4 @@
-import { MicroNode, RenderContext, TemplateNode } from '@micro-frame/utils/types';
+import { EarlyHint, MicroNode, TemplateNode } from '@micro-frame/utils/types';
 
 export interface FragmentNode {
   type: 'fragment';
@@ -7,5 +7,5 @@ export interface FragmentNode {
   props?: unknown;
   meta?: TemplateNode[];
   statusCode?: number | false;
-  provides: Record<string, (context: RenderContext) => unknown | Promise<unknown>>;
+  earlyHints?: EarlyHint[];
 }

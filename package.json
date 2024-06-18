@@ -5,9 +5,6 @@
   "author": "Stephan Dum <s.dum@netconomy.net>",
   "license": "MIT",
   "packageManager": "yarn@3.5.1",
-  "dependencies": {
-    "@microframe/cli": "1.0.0"
-  },
   "scripts": {
     "lint": "yarn workspaces foreach run lint",
     "dev-server": "cd packages/example/server && yarn webpack --watch",

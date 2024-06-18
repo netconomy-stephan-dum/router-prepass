@@ -4,7 +4,7 @@ import { NodeTypes } from '@micro-frame/server/types';
 import { ChunkNode } from './types';
 
 const chunk: NodeTypes<ChunkNode> = async (
-  { hydrate, chunkName, chunk: chunkFactory, aboveFold },
+  { hydrate = true, chunkName, chunk: chunkFactory, aboveFold },
   parentContext,
 ) => {
   const chunk = await chunkFactory().then((mod) => ('default' in mod ? mod.default : mod));

@@ -9,6 +9,7 @@ const Error404MicroNode = [
   {
     type: 'react',
     wrapper: { tagName: 'section' },
+    statusCode: 404,
     component: Error404,
   },
 ];

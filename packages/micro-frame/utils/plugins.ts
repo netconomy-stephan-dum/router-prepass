@@ -1,14 +1,14 @@
-import { NodeTypes} from "@micro-frame/server/types";
-import FragmentServer from "@micro-frame/plugin-fragment";
-import ReactServer from "@micro-frame/plugin-react";
-import ChunkServer from "@micro-frame/plugin-chunk";
-import RouterServer from '@micro-frame/plugin-router';
+import { NodeTypes } from './types';
+import fragment from '@micro-frame/plugin-fragment';
+import react from '@micro-frame/plugin-react';
+import chunk from '@micro-frame/plugin-chunk';
+import router from '@micro-frame/plugin-router';
 
 const plugins: Record<string, NodeTypes> = {
-  fragment: FragmentServer,
-  react: ReactServer,
-  chunk: ChunkServer,
-  router: RouterServer,
+  fragment,
+  react,
+  chunk,
+  router,
 };
 
 export default plugins;
