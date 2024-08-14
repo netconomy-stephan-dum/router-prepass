@@ -10,7 +10,7 @@ const router = (context: RenderContext<Provides>) => {
         path: '/',
         chunkName: 'Home',
         aboveFold: true,
-        hydrate: false,
+        hydrate: true,
         chunk: () => import(/* webpackChunkName: "Home" */ './pages/Home'),
       },
       {

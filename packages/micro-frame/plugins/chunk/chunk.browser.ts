@@ -14,7 +14,6 @@ const chunk: PnPNodeConstructor<ChunkNode> = async (
     ];
     return {
       unload: () => {
-        console.log('unload');
         elements.forEach((element) => {
           element.parentNode.removeChild(element);
         });
@@ -36,7 +35,6 @@ const chunk: PnPNodeConstructor<ChunkNode> = async (
       return node.navigate?.(...args);
     },
     unload: () => {
-      console.log('unload');
       parentContext.removeAssets(assets);
       return node.unload();
     },

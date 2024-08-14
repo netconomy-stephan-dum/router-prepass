@@ -6,11 +6,9 @@
   "license": "MIT",
   "packageManager": "yarn@3.5.1",
   "scripts": {
-    "lint": "yarn workspaces foreach run lint",
-    "dev-server": "cd packages/example/server && yarn webpack --watch",
-    "dev-browser": "cd packages/example/browser && yarn webpack --watch",
-    "start-server": "cd packages/example/server && node .dist/private/server.js",
-    "dev": "yarn dev-server & yarn dev-browser"
+    "dev": "yarn workspace @example/app run dev",
+    "build": "yarn workspace @example/app run build",
+    "start": "yarn workspace @example/app run start"
   },
   "workspaces": [
     "packages/**"

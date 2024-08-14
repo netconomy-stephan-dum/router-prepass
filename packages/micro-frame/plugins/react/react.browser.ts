@@ -97,7 +97,7 @@ const PnPReactComponent: PnPNodeConstructor<ReactNode> = (options, parentContext
 
   let renderResult: RenderResult = {};
 
-  if (outOfOrder) {
+  if (outOfOrder && isHydrate) {
     const template = document.querySelector(`#l_${context.levelId}`) as HTMLTemplateElement;
 
     Array.from(context.node.children).forEach((child) => {
@@ -113,7 +113,6 @@ const PnPReactComponent: PnPNodeConstructor<ReactNode> = (options, parentContext
 
   return {
     async unload() {
-      console.log('unload');
       const { unloadLazy, reactRoot } = renderResult;
       unloadLazy?.();
       document.querySelectorAll(`[data-chunk="${context.levelId}"]`).forEach((element) => {
